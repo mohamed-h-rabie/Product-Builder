@@ -10,7 +10,7 @@ export interface IProduct {
   category: {
     name: string;
     imageURL: string;
-  };
+  };  
 }
 
 export interface IFormInput {

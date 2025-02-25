@@ -8,15 +8,17 @@ interface IProps {
 const Card = ({ product }: IProps) => {
   const { title, description, price, imageURL, colors } = product;
   return (
-    <div className="mx-auto flex  max-w-sm flex-col space-y-4 rounded-md border p-[10px] md:mx-0 md:max-w-lg">
-      <p>{title}</p>
+    <div className="p-2 mx-auto flex max-w-sm flex-col space-y-3 rounded-md border md:mx-0 md:max-w-lg">
       <Image
-        onClick={() => console.log("clicked")}
-        className=" h-[240px] w-[360px] rounded-md"
+        className=" h-52 w-full rounded-md lg:object-cover"
         src={imageURL as string}
         alt="placeholder"
       />
-      <p className="h-[48px]">{textSlicer(description)}</p>
+      <p className="h-[56px] text-lg font-semibold">{textSlicer(title, 25)}</p>
+
+      <p className="break-words text-sm text-gray-500">
+        {textSlicer(description)}
+      </p>
       <div className="flex h-[20px] space-x-2">
         {colors.map((color) => {
           return (
@@ -38,7 +40,7 @@ const Card = ({ product }: IProps) => {
         {/* <span>{category}</span> */}
       </div>
 
-      <div className="mt-auto flex justify-between space-x-3">
+      <div className=" flex justify-between space-x-3">
         <Button className="w-full bg-indigo-600 transition-all hover:bg-indigo-600/85">
           Edit
         </Button>
