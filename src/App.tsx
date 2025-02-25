@@ -21,13 +21,13 @@ function App() {
       <div className="p-2 m-5 grid grid-cols-1 gap-2 rounded-md md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
         {renderproductList}
       </div>
-      <Modal closeModal={closeModal} />
       <Button
         className=" m-10 mx-auto flex p-[10px]  "
         onClick={() => openModal()}
       >
         Open Modal
       </Button>
+      <Modal closeModal={closeModal} />
     </main>
   );
 }
