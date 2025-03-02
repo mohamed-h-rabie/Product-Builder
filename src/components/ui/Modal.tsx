@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./button";
-import { IProduct } from "@/interfaces";
+import { ICategory, IProduct } from "@/interfaces";
+import Select from "./Select";
 interface ModalProps {
   children: React.ReactNode;
   setProduct: React.Dispatch<React.SetStateAction<IProduct>>;
@@ -10,6 +11,8 @@ interface ModalProps {
   renderColorsList: JSX.Element[];
   tempColors: string[];
   colorErrorMessage: "" | JSX.Element;
+  selectedCategory: { name: string; imageURL: string };
+  setSelectedCategory: (category: ICategory) => void;
 }
 const Modal = ({
   children,
@@ -20,6 +23,8 @@ const Modal = ({
   renderColorsList,
   tempColors,
   colorErrorMessage,
+  setSelectedCategory,
+  selectedCategory,
 }: ModalProps) => {
   const handleTransitionEnd = () => {
     if (dialogRef.current?.classList.contains("closing")) {
@@ -40,9 +45,9 @@ const Modal = ({
         }
       }}
       onTransitionEnd={handleTransitionEnd}
-      className=" w-[400px]  rounded-lg bg-white p-[20px] shadow-md"
+      className=" w-[400px]  rounded-lg bg-white   shadow-md"
     >
-      <main id="main" className="space-y-5">
+      <main id="main" className="space-y-5 p-[30px]">
         <h3 className=" text-lg font-medium leading-6 text-gray-900">
           ADD A NEW PRODUCT{" "}
         </h3>
@@ -60,6 +65,7 @@ const Modal = ({
             </div>
           ))}
         </div>
+        <Select selected={selectedCategory} setSelected={setSelectedCategory} />
         <div className="flex items-center justify-center gap-5">
           <Button
             type="submit"

@@ -13,7 +13,7 @@ export const productValidations = (product: {
     colors: "",
   };
   const validURL =
-    /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|bmp|svg)(\?.*)?)$/.test(
+    /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|bmp|svg)(?:\?.*)?|https?:\/\/images\.unsplash\.com\/photo-[\w-]+(?:\?.*)?)$/.test(
       product.imageURL,
     );
   if (
@@ -26,9 +26,9 @@ export const productValidations = (product: {
   if (
     !product.description.trim() ||
     product.description.length < 20 ||
-    product.description.length > 500
+    product.description.length > 2000
   ) {
-    errors.description = "Title must be between 10 and 50 characters";
+    errors.description = "Title must be between 20 and 500 characters";
   }
   if (!validURL) {
     errors.imageURL = "Invalid Image URL";
@@ -36,8 +36,6 @@ export const productValidations = (product: {
   if (!product.price.trim() || isNaN(Number(product.price))) {
     errors.price = "Price must be a number";
   }
-  if (product.colors.length < 1) {
-    errors.colors = "Choose at least one color";
-  }
+
   return errors;
 };
