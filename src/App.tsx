@@ -15,6 +15,7 @@ import { IProduct } from "./interfaces";
 import { productValidations } from "./validations/productValidations";
 import CircleColor from "./components/Card/CircleColor";
 import { v4 as uuid } from "uuid";
+import Select from "./components/ui/Select";
 
 const defaultProductValue: IProduct = {
   title: "",
@@ -40,6 +41,7 @@ function App() {
 
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dialogEditRef = useRef<HTMLDialogElement>(null);
+  const dialogDeleteRef = useRef<HTMLDialogElement>(null);
 
   //  HANDLERS
 
@@ -104,7 +106,6 @@ function App() {
       setErrors(errors);
       return;
     }
-    console.log(hasErrorMessage);
     const updatedProducts = [...products];
     updatedProducts[productToEditID] = {
       ...productToEdit,
@@ -115,6 +116,16 @@ function App() {
     setTempColors([]);
     closeEditModal();
   };
+  const onDeleteSubmitHandler = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const updatedProducts = products.filter(
+      (_, index) => index !== productToEditID,
+    );
+
+    setProducts(updatedProducts);
+    closeDeleteModal();
+  };
+  console.log(productToEditID);
   // OPENEDITDIALOG
   const openEditModal = () => {
     dialogEditRef.current?.showModal();
@@ -122,6 +133,21 @@ function App() {
   const closeEditModal = () => {
     dialogEditRef.current?.classList.add("closing");
   };
+  const openDeleteModal = () => {
+    dialogDeleteRef.current?.showModal();
+  };
+  const closeDeleteModal = () => {
+    dialogDeleteRef.current?.classList.add("closing");
+  };
+
+  const openModal = () => {
+    dialogRef.current?.showModal();
+  };
+
+  const closeModal = () => {
+    dialogRef.current?.classList.add("closing");
+  };
+
   // RENDER
   const renderproductList = products.map((product, id) => (
     <Card
@@ -129,6 +155,7 @@ function App() {
       product={product}
       setProductToEdit={setProductToEdit}
       openEditModal={openEditModal}
+      openDeleteModal={openDeleteModal}
       setProductToEditID={setProductToEditID}
       idx={id}
       setTempColors={setTempColors}
@@ -200,15 +227,6 @@ function App() {
     }
   };
 
-  /// OPEN MODAL
-  const openModal = () => {
-    dialogRef.current?.showModal();
-  };
-
-  const closeModal = () => {
-    dialogRef.current?.classList.add("closing");
-  };
-
   return (
     <main className="container">
       <Button
@@ -223,6 +241,8 @@ function App() {
       </div>
       <form onSubmit={onSubmitHandler}>
         <Modal
+          title="ADD A NEW PRODUCT
+"
           dialogRef={dialogRef}
           closeModal={closeModal}
           setProduct={setProduct}
@@ -235,11 +255,29 @@ function App() {
         >
           {" "}
           {renderInputList}
+          <div className="flex flex-row gap-1">{renderColorsList}</div>
+          {tempColors.length > 0 ? null : colorErrorMessage}
+          <div className="flex flex-row flex-wrap gap-1">
+            {tempColors.map((color) => (
+              <div
+                key={color}
+                className=" flex h-5 w-14  items-center justify-center rounded-sm px-8 text-sm uppercase text-white"
+                style={{ background: color }}
+              >
+                {color}
+              </div>
+            ))}
+          </div>
+          <Select
+            selected={selectedCategory}
+            setSelected={setSelectedCategory}
+          />
         </Modal>
       </form>
       {/* //EDIT */}
       <form onSubmit={onEditSubmitHandler}>
         <Modal
+          title="Edit Product"
           dialogRef={dialogEditRef}
           closeModal={closeEditModal}
           setProduct={setProductToEdit}
@@ -252,6 +290,39 @@ function App() {
         >
           {" "}
           {renderEditInputList}
+          <div className="flex flex-row gap-1">{renderColorsList}</div>
+          {tempColors.length > 0 ? null : colorErrorMessage}
+          <div className="flex flex-row flex-wrap gap-1">
+            {tempColors.map((color) => (
+              <div
+                key={color}
+                className=" flex h-5 w-14  items-center justify-center rounded-sm px-8 text-sm uppercase text-white"
+                style={{ background: color }}
+              >
+                {color}
+              </div>
+            ))}
+          </div>
+          <Select
+            selected={selectedCategory}
+            setSelected={setSelectedCategory}
+          />
+        </Modal>
+      </form>
+      <form onSubmit={onDeleteSubmitHandler}>
+        <Modal
+          title="Delete Product"
+          dialogRef={dialogDeleteRef}
+          closeModal={closeDeleteModal}
+          setProduct={setProductToEdit}
+          defaultProductValue={defaultProductValue}
+          renderColorsList={renderColorsList}
+          tempColors={tempColors}
+          colorErrorMessage={colorErrorMessage}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        >
+          <h1>Delete this product</h1>
         </Modal>
       </form>
     </main>

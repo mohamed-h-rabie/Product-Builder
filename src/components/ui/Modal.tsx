@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "./button";
 import { ICategory, IProduct } from "@/interfaces";
-import Select from "./Select";
 interface ModalProps {
   children: React.ReactNode;
   setProduct: React.Dispatch<React.SetStateAction<IProduct>>;
@@ -13,6 +12,8 @@ interface ModalProps {
   colorErrorMessage: "" | JSX.Element;
   selectedCategory: { name: string; imageURL: string };
   setSelectedCategory: (category: ICategory) => void;
+  title: string;
+  
 }
 const Modal = ({
   children,
@@ -20,11 +21,8 @@ const Modal = ({
   defaultProductValue,
   closeModal,
   dialogRef,
-  renderColorsList,
-  tempColors,
-  colorErrorMessage,
-  setSelectedCategory,
-  selectedCategory,
+
+  title,
 }: ModalProps) => {
   const handleTransitionEnd = () => {
     if (dialogRef.current?.classList.contains("closing")) {
@@ -48,24 +46,11 @@ const Modal = ({
       className=" w-[400px]  rounded-lg bg-white   shadow-md"
     >
       <main id="main" className="space-y-5 p-[30px]">
-        <h3 className=" text-lg font-medium leading-6 text-gray-900">
-          ADD A NEW PRODUCT{" "}
+        <h3 className=" text-lg font-medium uppercase leading-6 text-gray-900">
+          {title}
         </h3>
         {children}
-        <div className="flex flex-row gap-1">{renderColorsList}</div>
-        {tempColors.length > 0 ? null : colorErrorMessage}
-        <div className="flex flex-row gap-1">
-          {tempColors.map((color) => (
-            <div
-              key={color}
-              className=" flex h-5 w-14 items-center justify-center rounded-sm px-8 text-sm uppercase text-white"
-              style={{ background: color }}
-            >
-              {color}
-            </div>
-          ))}
-        </div>
-        <Select selected={selectedCategory} setSelected={setSelectedCategory} />
+
         <div className="flex items-center justify-center gap-5">
           <Button
             type="submit"

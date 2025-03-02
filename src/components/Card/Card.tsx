@@ -9,6 +9,7 @@ interface IProps {
   setProductToEditID: React.Dispatch<React.SetStateAction<number>>;
   idx: number;
   setTempColors: React.Dispatch<React.SetStateAction<string[]>>;
+  openDeleteModal: () => void;
 }
 const Card = ({
   product,
@@ -17,6 +18,7 @@ const Card = ({
   setProductToEditID,
   idx,
   setTempColors,
+  openDeleteModal,
 }: IProps) => {
   const { title, description, price, imageURL, colors, category } = product;
   const onEditHandler = () => {
@@ -24,8 +26,11 @@ const Card = ({
     openEditModal();
     setProductToEdit(product);
     setTempColors(colors);
-    
-    
+  };
+  const onDeleteHandler = () => {
+    setProductToEditID(Number(idx));
+
+    openDeleteModal();
   };
   return (
     <div className="mx-auto flex max-w-sm flex-col space-y-3 rounded-md border p-2 md:mx-0 md:max-w-lg">
@@ -69,7 +74,12 @@ const Card = ({
         >
           Edit
         </Button>
-        <Button className="w-full bg-red-600  transition-all hover:bg-red-600/85">
+        <Button
+          onClick={() => {
+            onDeleteHandler();
+          }}
+          className="w-full bg-red-600  transition-all hover:bg-red-600/85"
+        >
           Destory
         </Button>
       </div>
