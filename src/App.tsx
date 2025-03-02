@@ -5,9 +5,10 @@ import { Button } from "./components/ui/button";
 import Input from "./components/ui/Input";
 import Modal from "./components/ui/Modal";
 // import { Button } from "./components/ui/button";
-import { formInputsList, productList } from "./lib/fakeData";
+import { colors, formInputsList, productList } from "./lib/fakeData";
 import { IProduct } from "./interfaces";
 import { productValidations } from "./validations/productValidations";
+import CircleColor from "./components/Card/CircleColor";
 const defaultProductValue: IProduct = {
   title: "",
   description: "",
@@ -20,10 +21,14 @@ const defaultProductValue: IProduct = {
   },
 };
 function App() {
+  //  STATES
+
   const [product, setProduct] = useState<IProduct>(defaultProductValue);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [tempColors, setTempColors] = useState<string[]>([]);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
+  //  HANDLERS
   console.log(errors);
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +36,7 @@ function App() {
     setProduct({
       ...product,
       [name]: value,
+      colors: tempColors,
     });
 
     setErrors({
@@ -42,8 +48,7 @@ function App() {
     e.preventDefault();
 
     const errors = productValidations(product);
-    console.log(errors);
-
+    console.log(product);
     const hasErrorMessage =
       Object.values(errors).some((value) => value.length > 0) ||
       Object.values(errors).every((value) => value.length > 0);
@@ -53,7 +58,10 @@ function App() {
     }
     closeModal();
     setProduct(defaultProductValue);
+    setTempColors([]);
   };
+  console.log(product, "after submit");
+  console.log(tempColors, "after submit");
   // RENDER
   const renderproductList = productList.map((product) => (
     <Card key={product.id} product={product} />
@@ -82,6 +90,24 @@ function App() {
       </div>
     );
   });
+  const renderColorsList = colors.map((color) => {
+    return (
+      <div key={color}>
+        <CircleColor onClick={() => addOrRemoveColor(color)} color={color} />
+      </div>
+    );
+  });
+  const colorErrorMessage = errors["colors"] && (
+    <span className="text-sm text-red-500">{errors["colors"]}</span>
+  );
+  const addOrRemoveColor = (color: string) => {
+    if (tempColors.includes(color)) {
+      setTempColors(tempColors.filter((c) => c !== color));
+    } else {
+      setTempColors((prev) => [...prev, color]);
+    }
+  };
+  console.log(tempColors);
 
   /// OPEN MODAL
   const openModal = () => {
@@ -93,7 +119,7 @@ function App() {
   return (
     <main className="container">
       <Button
-        className=" m-10 mx-auto flex p-[10px]  "
+        className="m-10 mx-auto flex p-[10px]"
         onClick={() => openModal()}
       >
         Open Modal
@@ -108,6 +134,9 @@ function App() {
           closeModal={closeModal}
           setProduct={setProduct}
           defaultProductValue={defaultProductValue}
+          renderColorsList={renderColorsList}
+          tempColors={tempColors}
+          colorErrorMessage={colorErrorMessage}
         >
           {" "}
           {renderInputList}

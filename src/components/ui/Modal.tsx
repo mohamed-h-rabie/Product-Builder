@@ -7,6 +7,9 @@ interface ModalProps {
   defaultProductValue: IProduct;
   closeModal: () => void;
   dialogRef: React.RefObject<HTMLDialogElement>;
+  renderColorsList: JSX.Element[];
+  tempColors: string[];
+  colorErrorMessage: "" | JSX.Element;
 }
 const Modal = ({
   children,
@@ -14,6 +17,9 @@ const Modal = ({
   defaultProductValue,
   closeModal,
   dialogRef,
+  renderColorsList,
+  tempColors,
+  colorErrorMessage,
 }: ModalProps) => {
   const handleTransitionEnd = () => {
     if (dialogRef.current?.classList.contains("closing")) {
@@ -22,8 +28,6 @@ const Modal = ({
     }
   };
   const onCancel = () => {
-    console.log("s");
-
     setProduct(defaultProductValue);
     closeModal();
   };
@@ -43,7 +47,19 @@ const Modal = ({
           ADD A NEW PRODUCT{" "}
         </h3>
         {children}
-
+        <div className="flex flex-row gap-1">{renderColorsList}</div>
+        {tempColors.length > 0 ? null : colorErrorMessage}
+        <div className="flex flex-row gap-1">
+          {tempColors.map((color) => (
+            <div
+              key={color}
+              className=" flex h-5 w-14 items-center justify-center rounded-sm px-8 text-sm uppercase text-white"
+              style={{ background: color }}
+            >
+              {color}
+            </div>
+          ))}
+        </div>
         <div className="flex items-center justify-center gap-5">
           <Button
             type="submit"
